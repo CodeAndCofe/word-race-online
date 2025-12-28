@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+#root
+{
+    background-color: #222831;
+    height: 100vh;
+}
