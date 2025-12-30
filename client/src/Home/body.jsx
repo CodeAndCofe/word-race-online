@@ -3,41 +3,63 @@ import { useState, useRef, useEffect } from "react";
 export default function Body() {
   const [text] = useState(
     "Racing against time, I sprinted through the shadows and suddenly, a monstrous creature appeared right in front of me!"
-  );
-  const [usertext, setUsertext] = useState([]);
-  const [words, setWords] = useState([]);
+  ); // the text requerment
+  const [is_next_key_wrong, Setis_next_key_wrong] = useState(false);
+  const [usertext, setUsertext] = useState("");// user inpiut words
+  const [words, setWords] = useState([]);// bot words
   const [showButton, setShowButton] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const ref = useRef(null);
   useEffect(() => {
     const splitWords = text.trim().split(/\s+/);
     setWords(splitWords);
-    setUsertext(new Array(splitWords.length).fill(""));
   }, [text]);
 
+  useEffect(()=>
+  {
+    console.log(usertext);
+    console.log("word is : " + words[currentIndex] + ",  user is : \"" + usertext +"\"");
+      if (words[currentIndex] == usertext)
+      {
+        setCurrentIndex(prev => prev + 1);
+        setUsertext("");
+      }
+  }, [usertext])
 
   useEffect(() => {
-    function handleKeyDown(e) {
-      if (showButton) return;
+    function handleKeyDown(e)
+    {
+      if (is_next_key_wrong == true)
+        return ;
 
-      if (e.key === "Backspace") {
-        setUsertext(prev => {
-          const copy = [...prev];
-          copy[currentIndex] = (copy[currentIndex] || "").slice(0, -1);
-          return copy;
+      if (/^[A-Za-z]$/.test(e.key) === false && e.key !== "Backspace" && e.key !== " ")
+          return ;
+      if (e.key == "Backspace")// whataver user back space the string would erase back
+      {
+        setUsertext((prev) =>
+        {
+          prev = prev.substring(0, prev.length - 1);
+          return prev;
         });
         return;
       }
+      setUsertext((prev) =>
+        {
+          prev = (prev + e.key)
+          return prev;
+        });
+      // if the current word matches with user word input
 
-      if (e.key.length !== 1) return;
+      
+      
 
-      setUsertext(prev => {
-        const copy = [...prev];
-        copy[currentIndex] += e.key;
-        return copy;
-      });
+      
+      // if next key wrong do
+      // else add key to user and compare if it wrong
+      // if it right then color key with color green or blue
+      // howover the color should be red
+      //once the word correct he can no longer back to previews word once he clicked espace
     }
-
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [showButton, currentIndex]);
@@ -47,9 +69,6 @@ export default function Body() {
       <div className="flex flex-row gap-2 justify-center flex-wrap w-[50%]">
         {words.map((word, index) => (
           <div className="relative">
-            <div className="bg-[#393E46] absolute top-0 left-0 text-blue-400 opacity-[100%] z-10 font-semibold text-2xl" ref={ref}>
-              {usertext[index] }
-            </div>
               <div
                 key={index}
                 className=" text-gray-500  font-semibold text-2xl z-1"
