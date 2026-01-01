@@ -1,6 +1,14 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 
 export default function Body() {
+  const nonPrintableKeys = new Set([
+    "Enter", "Tab", "Escape", "Shift", "Meta", "CapsLock" ,"Control",
+    "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight",
+    "Home", "End", "PageUp", "PageDown","Tab",
+    "Insert", "PrintScreen", "Pause",
+    "F1","F2","F3","F4","F5","F6","F7","F8","F9","F10","F11","F12",
+    "NumLock", "ScrollLock"
+  ]);
   const [text] = useState(
     "Racing against time, I sprinted through the shadows and suddenly, a monstrous creature appeared right in front of me!"
   );
@@ -67,12 +75,12 @@ export default function Body() {
       }
 
       // Record start time on first key press
-      if (!startTime && /^[a-zA-Z]$/.test(e.key)) {
+      if (!startTime && /^[a-zA-Z]$/.test(e.key)){
         setStartTime(Date.now());
       }
 
       // Handle backspace
-      if (e.key === 'Backspace') {
+      if (e.key === 'Backspace' || e.key == "Delete") {
         setUserInput(prev => prev.slice(0, -1));
         return;
       }
@@ -87,8 +95,8 @@ export default function Body() {
         return;
       }
 
-      // Handle letters only
-      if (/^[a-zA-Z]$/.test(e.key)) {
+      console.log(e.key)
+      if (!nonPrintableKeys.has(e.key)) {
         setUserInput(prev => prev + e.key);
       }
     };
