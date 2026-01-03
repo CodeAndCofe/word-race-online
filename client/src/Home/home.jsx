@@ -1,4 +1,4 @@
-import Header from "./header"
+import Header from "./Header"
 import Body from "./body"
 
 export default function Home() {
