@@ -39,7 +39,6 @@ const ActiveTestScreen = ({
         containerRef={containerRef}
       />
 
-      {/* Progress and Stats */}
       <ProgressBar
         progress={progress}
         currentWordIndex={currentWordIndex}

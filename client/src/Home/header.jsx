@@ -7,10 +7,8 @@
 
 export default function Header() {
   return (
-    <header className="w-full  p-4 shadow-md">
+    <header className="w-full shadow-sm shadow-[#3b82f6] fixed p-7">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-        
-        {/* Logo */}
         <h1 className="text-3xl md:text-4xl font-extrabold text-white tracking-wide select-none cursor-pointer">
           WordRace
         </h1>

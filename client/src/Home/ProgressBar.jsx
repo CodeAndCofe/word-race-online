@@ -11,7 +11,7 @@ const ProgressBar = ({
   const accuracy = calculateAccuracy(charStates);
   
   return (
-    <div className="w-full max-w-4xl mt-6">
+    <div className="w-full  mt-6">
       <div className="flex justify-between text-gray-300 text-sm mb-2">
         <div className="flex gap-6">
           <span className="font-medium">Progress: {Math.round(progress)}%</span>

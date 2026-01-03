@@ -12,7 +12,7 @@ const ResultsScreen = ({
   const accuracy = calculateAccuracy(charStates);
   
   return (
-    <div className="bg-gradient-to-br from-gray-900 to-blue-900/30 rounded-xl p-8 max-w-lg w-full text-center">
+    <div className="bg-gradient-to-br from-gray-900 to-blue-900/30 rounded-xl p-8 max-w-lg w-full text-center ml-[50%] transform-[translateX(-50%)]">
       <h2 className="text-2xl font-bold text-white mb-6">Test Completed!</h2>
       
       <div className="grid grid-cols-2 gap-6 mb-8">

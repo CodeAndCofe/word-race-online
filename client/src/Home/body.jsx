@@ -32,7 +32,7 @@ const Body = () => {
     >
       <div className="w-full max-w-6xl">
         <div 
-          className="rounded-2xl p-8 mb-8 transition-all duration-300"
+          className="rounded-2xl p-8 mb-8 transition-all duration-300 "
           style={{ backgroundColor: COLOR_SCHEME.surface }}
         >
           {testCompleted ? (
