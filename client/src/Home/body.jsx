@@ -19,6 +19,7 @@ export default function Body() {
   const [showButton, setShowButton] = useState(true);
   const [startTime, setStartTime] = useState(null);
   const containerRef = useRef(null);
+  const [oldProgress, setOldProgress] = useState(0);
 
   // Initialize words and character states
   useEffect(() => {
@@ -65,7 +66,6 @@ export default function Body() {
     }
   }, [userInput, currentWordIndex, words, showButton]);
 
-  // Handle keyboard input
   useEffect(() => {
     if (showButton) return;
 
@@ -189,12 +189,10 @@ export default function Body() {
     );
   };
 
-  // Render progress bar
-  const ProgressBar = () => {
-    const progress = ((currentWordIndex + (userInput.length / words[currentWordIndex]?.length || 0)) / words.length) * 100;
-    
-    return (
-      <div className="w-full max-w-2xl mt-4">
+
+  function  progress_html(progress)
+  {
+    return ( <div className="w-full max-w-2xl mt-4">
         <div className="flex justify-between text-gray-400 text-sm mb-1">
           <span>Progress: {Math.round(progress)}%</span>
           {startTime && <span>WPM: {calculateWPM()}</span>}
@@ -205,12 +203,20 @@ export default function Body() {
             style={{ width: `${progress}%` }}
           />
         </div>
-      </div>
+      </div>)
+  }
+  const ProgressBar = () => {
+    if (oldProgress >= 100)
+        return (progress_html(oldProgress));
+    const progress = ((currentWordIndex + (userInput.length / words[currentWordIndex]?.length || 0)) / words.length) * 100;
+    setOldProgress(progress);
+    return (
+     progress_html(progress)
     );
   };
 
   return (
-    <div className="p-4 flex flex-col items-center w-screen min-h-screen bg-gray-900">
+    <div className="p-4 flex flex-col items-center w-[100%] min-h-screen bg-gray-900">
       <div className="rounded-lg p-8 min-h-[400px] w-full max-w-6xl bg-gray-800 flex flex-col items-center justify-center">
         {showButton ? (
           <div className="flex flex-col items-center justify-center h-64">
