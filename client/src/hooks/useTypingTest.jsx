@@ -44,7 +44,7 @@ const useTypingTest = () => {
   // Handle character state updates
   useEffect(() => {
     if (!isTestActive || !words.length || currentWordIndex >= words.length) return;
-
+    
     const currentWord = words[currentWordIndex];
     const typedLength = userInput.length;
 
@@ -111,7 +111,12 @@ const useTypingTest = () => {
       }
 
       if (!NON_PRINTABLE_KEYS.has(e.key) && e.key.length === 1) {
-        setUserInput(prev => prev + e.key);
+          setUserInput(prev =>{
+            if (prev.length > words[currentWordIndex].length)
+                return prev;
+            prev += e.key;
+            return prev;
+          });
       }
     };
 
