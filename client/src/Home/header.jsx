@@ -5,7 +5,7 @@
 // if user clicked login we just make user log in back to his account
 
 
-export default function Header() {
+export default function Header({func}) {
   return (
     <header className="w-full shadow-sm shadow-[#3b82f6] fixed p-7">
       <div className="max-w-7xl mx-auto flex items-center justify-between">

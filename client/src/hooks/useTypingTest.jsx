@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from "react";
-import { TEXT, NON_PRINTABLE_KEYS } from "../const";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { TEXT, NON_PRINTABLE_KEYS } from "../const/index.js";
 import { calculateProgress } from "../utils/typingUtils";
 
 const useTypingTest = () => {
@@ -18,7 +18,8 @@ const useTypingTest = () => {
   const inputStateRef = useRef({
     userInput: "",
     currentWordIndex: 0,
-    isTestActive: false
+    isTestActive: false,
+    words: []
   });
 
   // Initialize words and character states
@@ -30,6 +31,9 @@ const useTypingTest = () => {
       Array(word.length).fill(null)
     );
     setCharStates(initialCharStates);
+    
+    // Also update the ref with initial words
+    inputStateRef.current.words = splitWords;
   }, []);
 
   // Update ref whenever state changes
@@ -37,7 +41,8 @@ const useTypingTest = () => {
     inputStateRef.current = {
       userInput,
       currentWordIndex,
-      isTestActive
+      isTestActive,
+      words: inputStateRef.current.words // Keep the existing words
     };
   }, [userInput, currentWordIndex, isTestActive]);
 
@@ -81,7 +86,7 @@ const useTypingTest = () => {
     }
   }, [userInput, currentWordIndex, words, isTestActive]);
 
-  // Handle keyboard input
+  // Handle keyboard input - FIXED VERSION
   useEffect(() => {
     const handleKeyDown = (e) => {
       const state = inputStateRef.current;
@@ -90,6 +95,14 @@ const useTypingTest = () => {
 
       if (e.key === ' ') {
         e.preventDefault();
+        
+        // Use the current state from ref
+        const currentWord = words[state.currentWordIndex];
+        if (state.userInput === currentWord && state.currentWordIndex < words.length - 1) {
+          setCurrentWordIndex(prev => prev + 1);
+          setUserInput("");
+        }
+        return;
       }
 
       if (!startTime && /^[a-zA-Z]$/.test(e.key)) {
@@ -101,22 +114,15 @@ const useTypingTest = () => {
         return;
       }
 
-      if (e.key === ' ') {
-        const currentWord = words[state.currentWordIndex];
-        if (state.userInput === currentWord && state.currentWordIndex < words.length - 1) {
-          setCurrentWordIndex(prev => prev + 1);
-          setUserInput("");
-        }
-        return;
-      }
-
       if (!NON_PRINTABLE_KEYS.has(e.key) && e.key.length === 1) {
-          setUserInput(prev =>{
-            if (prev.length > words[currentWordIndex].length)
-                return prev;
-            prev += e.key;
-            return prev;
-          });
+        setUserInput(prev => {
+          const currentWord = words[inputStateRef.current.currentWordIndex];
+          // Prevent typing beyond word length
+          if (prev.length < currentWord.length) {
+            return prev + e.key;
+          }
+          return prev;
+        });
       }
     };
 
@@ -139,7 +145,7 @@ const useTypingTest = () => {
   }, [currentWordIndex, isTestActive]);
 
   // Reset test to initial state
-  const resetTest = () => {
+  const resetTest = useCallback(() => {
     setUserInput("");
     setCurrentWordIndex(0);
     setStartTime(null);
@@ -149,13 +155,13 @@ const useTypingTest = () => {
     
     const initialCharStates = words.map(word => Array(word.length).fill(null));
     setCharStates(initialCharStates);
-  };
+  }, [words]);
 
   // Start the typing test
-  const startTest = () => {
+  const startTest = useCallback(() => {
     setIsTestActive(true);
     setTestCompleted(false);
-  };
+  }, []);
 
   return {
     // State
